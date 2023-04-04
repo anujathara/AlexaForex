@@ -435,7 +435,7 @@ exports.handler = function (request, context) {
                     }
                 }
             }
-        };
+        }; 
         log("DEBUG", "Alexa.ContactSensor ", JSON.stringify(response));
 
         const gateway_data = JSON.stringify(response).toString('utf8');
