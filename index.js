@@ -24,7 +24,7 @@ exports.handler = function (request, context) {
     const tokenEndpoint = 'https://api.amazon.com/auth/o2/token';
     const eventGatewayEndpoint = 'https://api.eu.amazonalexa.com/v3/events';
     let forexRate = '';
-    const forexHighTriggerRate = 101.92;
+    const forexHighTriggerRate = 102.5;
 
         if (request.directive.header.namespace === 'Alexa.Discovery' && request.directive.header.name === 'Discover') {
             log("DEBUG:", "Discover request", JSON.stringify(request));
@@ -128,7 +128,7 @@ exports.handler = function (request, context) {
                         "manufacturerName": "Smart Device Company",
                         "friendlyName": "Forex",
                         "description": "Virtual smart light bulb",
-                        "displayCategories": ["LIGHT"],
+                        "displayCategories": ["CONTACT_SENSOR"],
                         "additionalAttributes": {
                             "manufacturer": "Sample Manufacturer",
                             "model": "Sample Model",
@@ -145,17 +145,6 @@ exports.handler = function (request, context) {
                         },
                         "capabilities":
                             [
-                                {
-                                    "interface": "Alexa.PowerController",
-                                    "version": "3",
-                                    "type": "AlexaInterface",
-                                    "properties": {
-                                        "supported": [{
-                                            "name": "powerState"
-                                        }],
-                                        "retrievable": true
-                                    }
-                                },
                                 {
                                     "type": "AlexaInterface",
                                     "interface": "Alexa.ContactSensor",
