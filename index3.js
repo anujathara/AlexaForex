@@ -24,38 +24,38 @@ exports.handler = function (request, context) {
     const tokenEndpoint = 'https://api.amazon.com/auth/o2/token';
     const eventGatewayEndpoint = 'https://api.eu.amazonalexa.com/v3/events';
     let forexRate = '';
-    const forexHighTriggerRate = 102.5;
+    const forexHighTriggerRate = 101.92;
 
-    if (request.directive.header.namespace === 'Alexa.Discovery' && request.directive.header.name === 'Discover') {
-        log("DEBUG:", "Discover request", JSON.stringify(request));
-        handleDiscovery(request, context, "");
-    }
-    else if (request.directive.header.namespace === 'Alexa.PowerController') {
-        if (request.directive.header.name === 'TurnOn' || request.directive.header.name === 'TurnOff') {
-            log("DEBUG:", "TurnOn or TurnOff Request", JSON.stringify(request));
-            handlePowerControl(request, context);
+        if (request.directive.header.namespace === 'Alexa.Discovery' && request.directive.header.name === 'Discover') {
+            log("DEBUG:", "Discover request", JSON.stringify(request));
+            handleDiscovery(request, context, "");
         }
-    }
-    else if (request.directive.header.namespace === 'Alexa.Authorization' && request.directive.header.name === 'AcceptGrant') {
-        handleAuthorization(request, context)
-    }
-    else if (request.directive.header.namespace === 'Alexa.ContactSensor') {
-        if (request.directive.header.name === 'Dhanu') {
-            log("DEBUG:", "ChangeReport Request", JSON.stringify(request));
-            handleChangeReport(request, context);
+        else if (request.directive.header.namespace === 'Alexa.PowerController') {
+            if (request.directive.header.name === 'TurnOn' || request.directive.header.name === 'TurnOff') {
+                log("DEBUG:", "TurnOn or TurnOff Request", JSON.stringify(request));
+                handlePowerControl(request, context);
+            }
         }
-    }
-    else if (request.directive.header.namespace === 'Alexa.ContactSensor') {
-        if (request.directive.header.name === 'StateReport') {
-            log("DEBUG:", "StateReport Request", JSON.stringify(request));
-            handleStateReport(request, context);
+        else if (request.directive.header.namespace === 'Alexa.Authorization' && request.directive.header.name === 'AcceptGrant') {
+            handleAuthorization(request, context)
         }
-    }
-    else if (request.directive.header.namespace === 'GetForexRateEvent') {
-        console.log('Event Received from Scheduler');
-        getForexRate();
-        return 'Success';
-    }
+        else if (request.directive.header.namespace === 'Alexa.ContactSensor') {
+            if (request.directive.header.name === 'Dhanu') {
+                log("DEBUG:", "ChangeReport Request", JSON.stringify(request));
+                handleChangeReport(request, context);
+            }
+        }
+        else if (request.directive.header.namespace === 'Alexa.ContactSensor') {
+            if (request.directive.header.name === 'StateReport') {
+                log("DEBUG:", "StateReport Request", JSON.stringify(request));
+                handleStateReport(request, context);
+            }
+        }
+        else if (request.directive.header.namespace === 'GetForexRateEvent') {
+            console.log('Event Received from Scheduler');
+            getForexRate();
+            return 'Success';
+        }
 
 
     function handleAuthorization(request, context) {
@@ -128,7 +128,7 @@ exports.handler = function (request, context) {
                         "manufacturerName": "Smart Device Company",
                         "friendlyName": "Forex",
                         "description": "Virtual smart light bulb",
-                        "displayCategories": ["CONTACT_SENSOR"],
+                        "displayCategories": ["FAN", "CONTACT_SENSOR"],
                         "additionalAttributes": {
                             "manufacturer": "Sample Manufacturer",
                             "model": "Sample Model",
@@ -145,6 +145,153 @@ exports.handler = function (request, context) {
                         },
                         "capabilities":
                             [
+                                {
+              "type": "AlexaInterface",
+              "interface": "Alexa.RangeController",
+              "instance": "Fan.Speed",
+              "version": "3",
+              "properties": {
+                "supported": [
+                  {
+                    "name": "rangeValue"
+                  }
+                ],
+                "proactivelyReported": true,
+                "retrievable": true,
+                "nonControllable": false
+              },
+              "capabilityResources": {
+                "friendlyNames": [
+                  {
+                    "@type": "asset",
+                    "value": {
+                      "assetId": "Alexa.Setting.FanSpeed"
+                    }
+                  },
+                  {
+                    "@type": "text",
+                    "value": {
+                      "text": "Speed",
+                      "locale": "en-US"
+                    }
+                  },
+                  {
+                    "@type": "text",
+                    "value": {
+                      "text": "Velocidad",
+                      "locale": "es-MX"
+                    }
+                  },
+                  {
+                    "@type": "text",
+                    "value": {
+                      "text": "Vitesse",
+                      "locale": "fr-CA"
+                    }
+                  }
+                ]
+              },
+              "configuration": {
+                "supportedRange": {
+                  "minimumValue": 1,
+                  "maximumValue": 10,
+                  "precision": 1
+                },
+                "presets": [
+                  {
+                    "rangeValue": 10,
+                    "presetResources": {
+                      "friendlyNames": [
+                        {
+                          "@type": "asset",
+                          "value": {
+                            "assetId": "Alexa.Value.Maximum"
+                          }
+                        },
+                        {
+                          "@type": "asset",
+                          "value": {
+                            "assetId": "Alexa.Value.High"
+                          }
+                        },
+                        {
+                          "@type": "text",
+                          "value": {
+                            "text": "Highest",
+                            "locale": "en-US"
+                          }
+                        },
+                        {
+                          "@type": "text",
+                          "value": {
+                            "text": "Fast",
+                            "locale": "en-US"
+                          }
+                        },
+                        {
+                          "@type": "text",
+                          "value": {
+                            "text": "Alta",
+                            "locale": "es-MX"
+                          }
+                        },
+                        {
+                          "@type": "text",
+                          "value": {
+                            "text": "Élevée",
+                            "locale": "fr-CA"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "rangeValue": 1,
+                    "presetResources": {
+                      "friendlyNames": [
+                        {
+                          "@type": "asset",
+                          "value": {
+                            "assetId": "Alexa.Value.Minimum"
+                          }
+                        },
+                        {
+                          "@type": "asset",
+                          "value": {
+                            "assetId": "Alexa.Value.Low"
+                          }
+                        },
+                        {
+                          "@type": "text",
+                          "value": {
+                            "text": "Lowest",
+                            "locale": "en-US"
+                          }
+                        },
+                        {
+                          "@type": "text",
+                          "value": {
+                            "text": "Slow",
+                            "locale": "en-US"
+                          }
+                        },
+                        {
+                          "@type": "text",
+                          "value": {
+                            "text": "Baja",
+                            "locale": "es-MX"
+                          }
+                        },
+                        {
+                          "@type": "text",
+                          "value": {
+                            "text": "Faible",
+                            "locale": "fr-CA"
+                          }
+                        }
+                      ]
+                    }
+                  },
                                 {
                                     "type": "AlexaInterface",
                                     "interface": "Alexa.ContactSensor",
